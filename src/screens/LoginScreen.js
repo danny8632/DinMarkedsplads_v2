@@ -1,17 +1,21 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet, Text, TextInput, TouchableOpacity } from 'react-native';
 import Button from './../common/Button';
-/* import AuthContext from '../authContext'; */
+
+import {logUserIn, getUser} from '../api/authContext';
 
 const LoginScreen = () => {
-    /* const { signIn } = useContext(AuthContext); */
+    const login = logUserIn();
+    const user = getUser();
+
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [usernameError, setUsernameError] = useState('');
-    const [passwordError, setPasswordError] = useState('');
 
     return (
         <View style={styles.container}>
+            <View>
+                <Text style={styles.error_text}>{user.failedLogin ? 'Wrong' : ''}</Text>
+            </View>
             <View style={styles.inputView}>
                 <TextInput
                     style={styles.inputText}
@@ -19,7 +23,6 @@ const LoginScreen = () => {
                     placeholderTextColor="#bbbebf"
                     onChangeText={text => setUsername(text)}
                     value={username}
-                    error={usernameError}
                 />
             </View>
             <View style={styles.inputView}>
@@ -30,11 +33,10 @@ const LoginScreen = () => {
                     onChangeText={text => setPassword(text)}
                     secureTextEntry={true}
                     value={password}
-                    error={passwordError}
                 />
             </View>
 
-            <Button title="Login" onPress={() => signIn(username, password)} style={styles.loginBtn} />
+            <Button title="Login" onPress={() => login({username, password})} style={styles.loginBtn} />
 
             <TouchableOpacity>
                 <Text style={styles.loginText}>Sign Up</Text>
