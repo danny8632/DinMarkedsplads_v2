@@ -61,17 +61,17 @@ export const logUserIn = () => {
     const { setUser } = useContext(AuthContext);
 
     return ({username, password}) => {
-        console.log(username, password);
-        setUser({ type: 'SIGN_IN', token: 'dummy-auth-token' });
+        //console.log(username, password);
+        //setUser({ type: 'SIGN_IN', token: 'dummy-auth-token' });
 
-        /* if(username !== "gemme" || password !== "gemme")
+        if(username !== "gemme" || password !== "gemme")
         {
             setUser({ type : "FAILED_LOGIN" });
         }
         else
         {
             setUser({ type: 'SIGN_IN', token: 'dummy-auth-token' });
-        } */
+        }
     }
 }
 

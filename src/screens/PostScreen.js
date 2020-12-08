@@ -1,7 +1,6 @@
 import React from 'react';
 import { StyleSheet, ScrollView, View, Text, SafeAreaView, Image } from 'react-native';
 import Post from './../common/Post';
-import { Comments } from './../constants/StaticPosts';
 
 const Comment = ({comment}) => {
     return (
@@ -27,15 +26,13 @@ const Description = ({post}) => {
 
 const PostScreen = ({route}) => {
 
-    let comments = Comments.filter(comment => comment.postId == route.params.post.id);
-
     return (
         <SafeAreaView style={styles.container}>
 			<Post post={route.params.post}></Post>
             <Description post={route.params.post}></Description>
 
             <ScrollView removeClippedSubviews={true}>
-                {comments.map(x => <Comment key={x.id} comment={x} />)}
+                {route.params.post.comments.map(x => <Comment key={x.id} comment={x} />)}
             </ScrollView>
 		</SafeAreaView>
     );

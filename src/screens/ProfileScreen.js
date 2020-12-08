@@ -21,10 +21,12 @@ const HomeScreen = ({navigation}) => {
 
 const styles = StyleSheet.create({
     container : {
-        flex: 1
+        flex: 1,
     },
     btn : {
-        marginBottom: 20
+        marginBottom: 20,
+        width : "90%",
+        alignSelf : "center"
     }
 });
 

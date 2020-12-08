@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
+import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 
 import HomeScreen from './../screens/HomeScreen';
 import PostScreen from './../screens/PostScreen';
@@ -10,7 +11,7 @@ import LoginScreen from './../screens/LoginScreen';
 import CreatePostScreen from './../screens/CreatePostScreen';
 import ProfileScreen from './../screens/ProfileScreen';
 
-import {getUser} from '../api/authContext';
+import { getUser } from '../api/authContext';
 
 const Stack = createStackNavigator();
 
@@ -31,7 +32,7 @@ const LoginStack = createStackNavigator();
 const LoginNavigator = () => {
 
     const user = getUser();
-    
+
     return (
         <LoginStack.Navigator>
             <Stack.Screen name="Login" component={LoginScreen} options={{ title: "Login" }} />
@@ -42,7 +43,7 @@ const LoginNavigator = () => {
 const ProfileStack = createStackNavigator();
 
 const ProfileNavigator = () => {
-    
+
     return (
         <ProfileStack.Navigator>
             <Stack.Screen name="ProfileScreen" component={ProfileScreen} options={{ title: "Profile" }} />
@@ -60,15 +61,32 @@ const RootNavigator = () => {
 
     return (
         <NavigationContainer>
-            <Tab.Navigator initialRouteName="Home">
+            <Tab.Navigator
+                initialRouteName="Home"
+                screenOptions={({ route }) => ({
+                    tabBarIcon: ({ focused, color, size }) => {
+                        if (route.name === 'Home') {
+                            return <FontAwesome name="home" size={24} color="black" />;
+                        } else if (route.name === 'Login' || route.name === 'Profile') {
+                            return <MaterialCommunityIcons name="account-circle" size={24} color="black" />
+                        } else if (route.name === "Search") {
+                            return <FontAwesome name="search" size={24} color="black" />
+                        }
+                    },
+                })}
+                tabBarOptions={{
+                    activeTintColor: 'tomato',
+                    inactiveTintColor: 'gray',
+                }}
+            >
                 <Tab.Screen name="Home" component={StackNavigator} />
                 <Tab.Screen name="Search" component={SearchScreen} />
                 {
-                    user.userToken == null 
-                    ? 
-                    (<Tab.Screen name="Login" component={LoginNavigator} />) 
-                    : 
-                    (<Tab.Screen name="Profile" component={ProfileNavigator} />)
+                    user.userToken == null
+                        ?
+                        (<Tab.Screen name="Login" component={LoginNavigator} />)
+                        :
+                        (<Tab.Screen name="Profile" component={ProfileNavigator} />)
                 }
             </Tab.Navigator>
         </NavigationContainer>
