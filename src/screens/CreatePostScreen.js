@@ -90,12 +90,15 @@ const styles = StyleSheet.create({
         backgroundColor: '#465881',
         borderRadius: 8,
         margin: 10,
-        padding: 10,
+        padding: 5,
+        paddingLeft : 10,
+        paddingRight : 10,
         alignSelf: "center"
     },
     inputText : {
-        height: 20,
-        color: 'white'
+        height: 40,
+        color: 'white',
+        fontSize : 18
     },
     btn : {
         width : "80%",
