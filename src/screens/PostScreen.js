@@ -27,14 +27,14 @@ const Description = ({post}) => {
 const PostScreen = ({route}) => {
 
     return (
-        <SafeAreaView style={styles.container}>
+        <ScrollView style={styles.container}>
 			<Post post={route.params.post}></Post>
             <Description post={route.params.post}></Description>
 
             <ScrollView removeClippedSubviews={true}>
                 {route.params.post.comments.map(x => <Comment key={x.id} comment={x} />)}
             </ScrollView>
-		</SafeAreaView>
+		</ScrollView>
     );
 }
 
