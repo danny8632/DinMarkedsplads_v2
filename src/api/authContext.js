@@ -1,8 +1,25 @@
-import React, { useContext, useReducer } from 'react';
+import React, { useContext, useReducer, useState, useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const AuthContext = React.createContext()
 
 const AuthContextProvider = (props) => {
+
+    const [sessionText, setSessionText] = useState(null)
+
+    const getData = async () => {
+        try {
+            const sestext = await AsyncStorage.getItem('@storage_Key')
+            setSessionText(sestext)
+
+        } catch (e) {
+            alert('Failed to fetch the data from storage')
+        }
+    }
+
+    useEffect( () => {
+        setSessionText(getData())
+    }, [] )
 
     const [user, setUser] = useReducer(
         (prevState, action) => {
@@ -39,7 +56,7 @@ const AuthContextProvider = (props) => {
         {
             isLoading: true,
             isSignout: false,
-            userToken: null,
+            userToken: sessionText,
             failedLogin : false,
         }
     );
@@ -57,6 +74,26 @@ export const getUser = () => {
     return user;
 }
 
+export const storeData = async (value) => {
+    try {
+        await AsyncStorage.setItem('@storage_Key', value)
+    } catch (e) {
+        // saving error
+    }
+}
+
+/*export const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('@storage_Key')
+      console.log(value);
+      if(value !== null) {
+        return value;
+      }
+    } catch(e) {
+      // error reading value
+    }
+}*/
+
 export const logUserIn = () => {
     const { setUser } = useContext(AuthContext);
 
@@ -67,10 +104,12 @@ export const logUserIn = () => {
         if(username !== "gemme" || password !== "gemme")
         {
             setUser({ type : "FAILED_LOGIN" });
+            
         }
         else
         {
             setUser({ type: 'SIGN_IN', token: 'dummy-auth-token' });
+            storeData("gemme");
         }
     }
 }
