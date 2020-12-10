@@ -13,7 +13,7 @@ const AuthContextProvider = (props) => {
             setSessionText(sestext)
 
         } catch (e) {
-            alert('Failed to fetch the data from storage')
+            console.log('Failed to fetch the data from storage')
         }
     }
 
