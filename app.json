@@ -1,12 +1,4 @@
 {
   "name": "DinMarkedsplads_v2",
-  "displayName": "DinMarkedsplads_v2",
-  "expo": {
-    "name": "DinMarkedsplads_v2",
-    "slug": "DinMarkedsplads_v2",
-    "version": "1.0.0",
-    "assetBundlePatterns": [
-      "**/*"
-    ]
-  }
+  "displayName": "DinMarkedsplads_v2"
 }
