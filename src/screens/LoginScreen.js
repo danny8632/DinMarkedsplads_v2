@@ -53,27 +53,23 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     inputView: {
-        width: '80%',
+        width: '100%',
         backgroundColor: '#465881',
-        borderRadius: 25,
-        height: 50,
-        marginBottom: 20,
-        justifyContent: 'center',
-        padding: 20
+        borderRadius: 10,
+        margin: 20,
+        justifyContent: 'center'
     },
     inputText: {
-        height: 50,
+        margin : 10,
+        height: 40,
         color: 'white'
     },
     loginBtn: {
-        width: '80%',
+        width: '100%',
         backgroundColor: '#fb5b5a',
-        borderRadius: 25,
+        borderRadius: 10,
         height: 50,
-        alignItems: 'center',
         justifyContent: 'center',
-        marginTop: 40,
-        marginBottom: 10
     },
     loginText: {
         color: 'white'

@@ -70,7 +70,7 @@ const AuthContextProvider = (props) => {
 
                 try {
 
-                    let response = await fetch('http://192.168.55.15:3001/user/login', {
+                    let response = await fetch('http://api.dannyhaslund.dk:3001/user/login', {
                         method: 'POST',
                         headers: {
                             Accept: 'application/json',

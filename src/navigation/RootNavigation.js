@@ -10,7 +10,18 @@ import LoginScreen from './../screens/LoginScreen';
 import CreatePostScreen from './../screens/CreatePostScreen';
 import ProfileScreen from './../screens/ProfileScreen';
 
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+import { faHome, faUserCircle, faSearch, faSignInAlt } from '@fortawesome/free-solid-svg-icons'
+
 import { AuthContext } from '../api/authContext';
+
+
+const iconForTab = {
+    Home: faHome,
+    Profile: faUserCircle,
+    Search: faSearch,
+    Login: faSignInAlt
+}
 
 
 const Stack = createStackNavigator();
@@ -18,7 +29,17 @@ const Stack = createStackNavigator();
 const StackNavigator = () => {
 
     return (
-        <Stack.Navigator>
+        <Stack.Navigator
+            screenOptions={{
+                headerStyle: {
+                    backgroundColor: '#437FC7',
+                },
+                headerTintColor: '#fff',
+                headerTitleStyle: {
+                    fontWeight: 'bold',
+                },
+            }}
+        >
             <Stack.Screen name="Home" component={HomeScreen} options={{ title: "Home" }} />
             <Stack.Screen name="PostScreen" component={PostScreen} options={{ title: "Post" }} />
         </Stack.Navigator>
@@ -56,11 +77,22 @@ const RootNavigator = () => {
 
     const { user } = useContext(AuthContext);
 
-    //const user = getUser();
-
     return (
         <NavigationContainer>
-            <Tab.Navigator initialRouteName="Home">
+            <Tab.Navigator
+                initialRouteName="Home"
+                screenOptions={({ route }) => ({
+                    tabBarIcon: ({ focused, color, size }) => {
+                        let iconName = iconForTab[route.name];
+
+                        return <FontAwesomeIcon icon={iconName} color={color} size={size} />;
+                    },
+                })}
+                tabBarOptions={{
+                    activeTintColor: '#437FC7',
+                    inactiveTintColor: 'gray',
+                }}
+            >
                 <Tab.Screen name="Home" component={StackNavigator} />
                 <Tab.Screen name="Search" component={SearchScreen} />
                 {

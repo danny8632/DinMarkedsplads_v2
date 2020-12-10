@@ -1,13 +1,13 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet, ScrollView, SafeAreaView } from 'react-native';
 
 import Post from './../common/Post';
 
-import { getPosts } from './../api/postContext';
+import { PostsContext } from './../api/postContext';
 
 const HomeScreen = ({navigation}) => {
 
-    const posts = getPosts();
+    const { posts } = useContext(PostsContext)
 
     return (
         <SafeAreaView style={styles.container}>

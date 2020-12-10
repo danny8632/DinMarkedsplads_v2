@@ -1,6 +1,8 @@
-import React from 'react';
-import { StyleSheet, ScrollView, View, Text, SafeAreaView, Image } from 'react-native';
+import React, { useContext, useEffect } from 'react';
+import { StyleSheet, ScrollView, View, Text, Image } from 'react-native';
 import Post from './../common/Post';
+
+import { test, PostsContext } from './../api/postContext';
 
 const Comment = ({comment}) => {
     return (
@@ -8,7 +10,7 @@ const Comment = ({comment}) => {
             <Image source={require('./../assets/favicon.png')}></Image>
             <View style={styles.comment_text_wrapper}>
                 <Text style={styles.comment_username}>{comment.username}</Text>
-                <Text style={styles.comment_text}>{comment.text}</Text>
+                <Text style={styles.comment_text}>{comment.comment}</Text>
             </View>
         </View>
     );
@@ -26,13 +28,20 @@ const Description = ({post}) => {
 
 const PostScreen = ({route}) => {
 
+    let post = route.params.post;
+
+    const { postsContext } = useContext(PostsContext)
+
+    postsContext.fetchComments(post);
+
+
     return (
         <ScrollView style={styles.container}>
-			<Post post={route.params.post}></Post>
-            <Description post={route.params.post}></Description>
+			<Post post={post}></Post>
+            <Description post={post}></Description>
 
             <ScrollView removeClippedSubviews={true}>
-                {route.params.post.comments.map(x => <Comment key={x.id} comment={x} />)}
+                {post.comments.map(x => <Comment key={x.id} comment={x} />)}
             </ScrollView>
 		</ScrollView>
     );
