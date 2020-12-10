@@ -11,7 +11,13 @@ const PostsContextProvider = (props) => {
     const [posts, setPosts] = useState([]);
 
     useEffect(() => {
-        setPosts(() => Posts);
+        let postsFound = true;
+        getPostsFromApi().then(items => {
+            if(postsFound) {
+                setPosts(() => items);
+            }
+        })
+        return () => postsFound = false;
     }, []);
 
     return (
@@ -21,10 +27,20 @@ const PostsContextProvider = (props) => {
     )
 }
 
+const getPostsFromApi = () => {
+    return fetch('http://192.168.0.3:3001/product')
+        .then(data => data.json())
+}
+
 export const getPosts = () => {
     const { posts } = useContext(PostsContext);
 
     return posts;
+}
+
+export const getComments = () => {
+    return fetch('http://192.168.0.3:3001/comment')
+        .then(data => data.json())
 }
 
 export const addPost = () => {
