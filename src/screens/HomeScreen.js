@@ -3,7 +3,7 @@ import { StyleSheet, ScrollView, SafeAreaView } from 'react-native';
 
 import Post from './../common/Post';
 
-import { getPosts, getComments } from './../api/postContext';
+import { getPosts } from './../api/postContext';
 
 const HomeScreen = ({navigation}) => {
 

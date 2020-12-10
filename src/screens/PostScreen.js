@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, ScrollView, View, Text, SafeAreaView, Image } from 'react-native';
 import Post from './../common/Post';
+import { getCommentsFromPost } from './../api/postContext';
 
 const Comment = ({comment}) => {
     return (
@@ -25,6 +26,17 @@ const Description = ({post}) => {
 }
 
 const PostScreen = ({route}) => {
+    const [comments, setComments] = useState([]);
+
+    useEffect(() => {
+        let commentsFound = true;
+        getCommentsFromPost(route.params.post.userId).then(items => {
+            if(commentsFound) {
+                setComments(() => items);
+            }
+        })
+        return () => commentsFound = false;
+    }, []);
 
     return (
         <ScrollView style={styles.container}>
@@ -32,7 +44,7 @@ const PostScreen = ({route}) => {
             <Description post={route.params.post}></Description>
 
             <ScrollView removeClippedSubviews={true}>
-                {route.params.post.comments.map(x => <Comment key={x.id} comment={x} />)}
+                {comments.map(x => <Comment key={x.id} comment={x} />)}
             </ScrollView>
 		</ScrollView>
     );

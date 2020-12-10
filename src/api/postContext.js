@@ -38,8 +38,8 @@ export const getPosts = () => {
     return posts;
 }
 
-export const getComments = () => {
-    return fetch('http://192.168.0.3:3001/comment')
+export const getCommentsFromPost = (id) => {
+    return fetch('http://192.168.0.3:3001/comment?id=' + id)
         .then(data => data.json())
 }
 
