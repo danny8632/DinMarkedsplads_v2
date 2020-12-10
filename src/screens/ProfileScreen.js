@@ -1,19 +1,19 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet, ScrollView, SafeAreaView } from 'react-native';
 
 import Button from './../common/Button';
 
-import {logUserOut} from './../api/authContext';
+import { AuthContext } from './../api/authContext';
 
 const HomeScreen = ({navigation}) => {
 
-    const logout = logUserOut();
+    const { auth } = useContext(AuthContext);
 
     return (
         <SafeAreaView style={styles.container}>
 			<ScrollView removeClippedSubviews={true}>
                 <Button onPress={() => navigation.navigate("CreatePostScreen")} style={styles.btn} title="Create Post"/>
-                <Button onPress={() => logout()} style={styles.btn} title="Logout"/>
+                <Button onPress={() => auth.signOut()} style={styles.btn} title="Logout"/>
 			</ScrollView>
 		</SafeAreaView>
     );

@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { View, StyleSheet, Text, TextInput, TouchableOpacity } from 'react-native';
 import Button from './../common/Button';
 
-import {logUserIn, getUser} from '../api/authContext';
+import { AuthContext } from '../api/authContext';
 
 const LoginScreen = () => {
-    const login = logUserIn();
-    const user = getUser();
+    const { auth, user } = useContext(AuthContext);
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -36,7 +35,7 @@ const LoginScreen = () => {
                 />
             </View>
 
-            <Button title="Login" onPress={() => login({username, password})} style={styles.loginBtn} />
+            <Button title="Login" onPress={() => auth.signIn({username, password})} style={styles.loginBtn} />
 
             <TouchableOpacity>
                 <Text style={styles.loginText}>Sign Up</Text>
