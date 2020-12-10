@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 
-import { getUser } from './authContext';
+import { AuthContext } from './authContext';
 
 import { Posts } from './../constants/StaticPosts';
 
@@ -29,7 +29,7 @@ export const getPosts = () => {
 
 export const addPost = () => {
     const { posts, setPosts } = useContext(PostsContext);
-    const user = getUser();
+    const { user } = useContext(AuthContext);
 
     return ({title, description, image}) => {
         const id = posts.map(x => x.id).reduce((accumulator, currentValue) => accumulator > currentValue ? accumulator : currentValue) + 1;

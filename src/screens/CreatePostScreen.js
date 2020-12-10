@@ -1,15 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, SafeAreaView, ScrollView , TextInput, View} from 'react-native';
+import React, { useState, useContext } from 'react';
+import { StyleSheet, SafeAreaView, ScrollView, TextInput, View, Text } from 'react-native';
 
 import { StackActions } from '@react-navigation/native';
 
 import Button from './../common/Button';
 
-import {addPost} from './../api/postContext';
+import { addPost } from './../api/postContext';
 
-import * as ImagePicker from 'expo-image-picker';
+import { AuthContext } from '../api/authContext';
 
-const HomeScreen = ({navigation}) => {
+const HomeScreen = ({ navigation }) => {
+
+    const { user } = useContext(AuthContext);
 
     const createPost = addPost();
 
@@ -18,7 +20,7 @@ const HomeScreen = ({navigation}) => {
     const [image, setImage] = useState(null);
 
     const pickImage = async () => {
-        if (Platform.OS !== 'web') {
+        /* if (Platform.OS !== 'web') {
             const { status } = await ImagePicker.requestCameraRollPermissionsAsync();
 
             if (status !== 'granted') {
@@ -39,12 +41,13 @@ const HomeScreen = ({navigation}) => {
                     setImage(result.uri);
                 }
             }
-        }
+        } */
     }
 
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView>
+
                 <View style={styles.inputView}>
                     <TextInput
                         style={styles.inputText}
@@ -69,8 +72,8 @@ const HomeScreen = ({navigation}) => {
                 <Button style={styles.btn} title="Chose image" onPress={() => pickImage()} />
 
 
-                <Button style={[styles.btn, {backgroundColor : "#42f595"}]} title="Create Post" onPress={() => {
-                    createPost({title, description, image});
+                <Button style={[styles.btn, { backgroundColor: "#42f595" }]} title="Create Post" onPress={() => {
+                    createPost({ title, description, image });
                     const popAction = StackActions.pop(1);
                     navigation.dispatch(popAction);
                     navigation.navigate("Home");
@@ -86,25 +89,25 @@ const styles = StyleSheet.create({
         flex: 1
     },
     inputView: {
-        width : "80%",
+        width: "80%",
         backgroundColor: '#465881',
         borderRadius: 8,
         margin: 10,
         padding: 5,
-        paddingLeft : 10,
-        paddingRight : 10,
+        paddingLeft: 10,
+        paddingRight: 10,
         alignSelf: "center"
     },
-    inputText : {
+    inputText: {
         height: 40,
         color: 'white',
-        fontSize : 18
+        fontSize: 18
     },
-    btn : {
-        width : "80%",
-        alignSelf : "center",
+    btn: {
+        width: "80%",
+        alignSelf: "center",
         backgroundColor: "#465881",
-        marginTop : 20
+        marginTop: 20
     }
 });
 

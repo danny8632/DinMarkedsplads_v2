@@ -1,4 +1,5 @@
-import React, { useContext, useReducer } from 'react';
+import React, { useContext, useReducer, useState, useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const AuthContext = React.createContext()
 
@@ -12,14 +13,14 @@ const AuthContextProvider = (props) => {
                         ...prevState,
                         userToken: action.token,
                         isLoading: false,
-                        failedLogin : false,
+                        failedLogin: false,
                     };
                 case 'SIGN_IN':
                     return {
                         ...prevState,
                         isSignout: false,
                         userToken: action.token,
-                        failedLogin : false,
+                        failedLogin: false,
                     };
                 case 'SIGN_OUT':
                     return {
@@ -30,7 +31,7 @@ const AuthContextProvider = (props) => {
                 case 'FAILED_LOGIN':
                     return {
                         ...prevState,
-                        failedLogin : true,
+                        failedLogin: true,
                         isSignout: false,
                         userToken: null,
                     }
@@ -40,49 +41,89 @@ const AuthContextProvider = (props) => {
             isLoading: true,
             isSignout: false,
             userToken: null,
-            failedLogin : false,
+            failedLogin: false,
         }
     );
 
+    React.useEffect(() => {
+        // Fetch the token from storage then navigate to our appropriate place
+        const bootstrapAsync = async () => {
+            let userToken;
+
+            try {
+                userToken = await AsyncStorage.getItem('userToken');
+            } catch (e) {
+                console.log(e)
+            }
+
+            setUser({ type: 'RESTORE_TOKEN', token: userToken });
+        };
+
+        bootstrapAsync();
+    }, []);
+
+    const authContext = React.useMemo(
+        () => ({
+            signIn: async data => {
+
+                let json;
+
+                try {
+
+                    let response = await fetch('http://192.168.55.15:3001/user/login', {
+                        method: 'POST',
+                        headers: {
+                            Accept: 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            username: data.username,
+                            password: data.password
+                        })
+                    });
+                    json = await response.json();
+
+                    if (!json.success) {
+                        setUser({ type: "FAILED_LOGIN" });
+                        return console.log("Wrong");
+                    }
+
+                    await AsyncStorage.setItem('userToken', json.token)
+
+                    setUser({ type: 'SIGN_IN', token: json.token });
+
+
+                } catch (e) {
+                    console.log(e)
+                }
+
+                
+            },
+            signOut: async () => {
+                try {
+                    await AsyncStorage.removeItem('userToken')
+                } catch (e) {
+                    console.log(e)
+                }
+
+                setUser({ type: 'SIGN_OUT' })
+            },
+            signUp: async data => {
+
+                setUser({ type: 'SIGN_IN', token: 'dummy-auth-token' });
+            },
+            getUser : () => {
+                return user;
+            }
+        }),
+        []
+    );
+
     return (
-        <AuthContext.Provider value={{ user, setUser }}>
+        <AuthContext.Provider value={{auth :authContext, user}}>
             {props.children}
         </AuthContext.Provider>
     )
-}
-
-export const getUser = () => {
-    const { user } = useContext(AuthContext);
-
-    return user;
-}
-
-export const logUserIn = () => {
-    const { setUser } = useContext(AuthContext);
-
-    return ({username, password}) => {
-        //console.log(username, password);
-        //setUser({ type: 'SIGN_IN', token: 'dummy-auth-token' });
-
-        if(username !== "gemme" || password !== "gemme")
-        {
-            setUser({ type : "FAILED_LOGIN" });
-        }
-        else
-        {
-            setUser({ type: 'SIGN_IN', token: 'dummy-auth-token' });
-        }
-    }
-}
-
-
-export const logUserOut = () => {
-    const { setUser } = useContext(AuthContext);
-
-    return () => {
-        setUser({ type : "SIGN_OUT" });
-    }
-    
 }
 
 export default AuthContextProvider;

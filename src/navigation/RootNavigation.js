@@ -1,8 +1,7 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
-import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 
 import HomeScreen from './../screens/HomeScreen';
 import PostScreen from './../screens/PostScreen';
@@ -11,10 +10,10 @@ import LoginScreen from './../screens/LoginScreen';
 import CreatePostScreen from './../screens/CreatePostScreen';
 import ProfileScreen from './../screens/ProfileScreen';
 
-import { getUser } from '../api/authContext';
+import { AuthContext } from '../api/authContext';
+
 
 const Stack = createStackNavigator();
-
 
 const StackNavigator = () => {
 
@@ -30,8 +29,6 @@ const StackNavigator = () => {
 const LoginStack = createStackNavigator();
 
 const LoginNavigator = () => {
-
-    const user = getUser();
 
     return (
         <LoginStack.Navigator>
@@ -57,28 +54,13 @@ const Tab = createBottomTabNavigator();
 
 const RootNavigator = () => {
 
-    const user = getUser();
+    const { user } = useContext(AuthContext);
+
+    //const user = getUser();
 
     return (
         <NavigationContainer>
-            <Tab.Navigator
-                initialRouteName="Home"
-                screenOptions={({ route }) => ({
-                    tabBarIcon: ({ focused, color, size }) => {
-                        if (route.name === 'Home') {
-                            return <FontAwesome name="home" size={24} color="black" />;
-                        } else if (route.name === 'Login' || route.name === 'Profile') {
-                            return <MaterialCommunityIcons name="account-circle" size={24} color="black" />
-                        } else if (route.name === "Search") {
-                            return <FontAwesome name="search" size={24} color="black" />
-                        }
-                    },
-                })}
-                tabBarOptions={{
-                    activeTintColor: 'tomato',
-                    inactiveTintColor: 'gray',
-                }}
-            >
+            <Tab.Navigator initialRouteName="Home">
                 <Tab.Screen name="Home" component={StackNavigator} />
                 <Tab.Screen name="Search" component={SearchScreen} />
                 {
