@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { StyleSheet, SafeAreaView, ScrollView, TextInput, View, Text } from 'react-native';
+import { StyleSheet, SafeAreaView, ScrollView, TextInput, View, Image } from 'react-native';
 
 import { StackActions } from '@react-navigation/native';
 
@@ -19,18 +19,15 @@ const HomeScreen = ({ navigation }) => {
     const [address, setAddress] = useState('');
     const [zipcode, setZipcode] = useState(0);
     const [region, setRegion] = useState('');
-    const [files, setFiles] = useState(null);
+    const [files, setFiles] = useState({});
 
     const pickImage = async () => {
 
-        launchImageLibrary({mediaType : "photo", quality : 0.5}, async (file) => {
+        launchImageLibrary({mediaType : "photo", noData: true}, async (file) => {
             
+            file.name = file.fileName;
 
-            setFiles({
-                type : "image/jpg",
-                uri : file.uri,
-                name : "gemme.jpg"
-            })
+            setFiles(file)
         });
     }
 
@@ -99,6 +96,8 @@ const HomeScreen = ({ navigation }) => {
                         value={region}
                     />
                 </View>
+
+                <Image source={{ uri : files.uri}} style={{width : 300, height : 300}} />
 
                 <Button style={styles.btn} title="Chose image" onPress={() => pickImage()} />
 

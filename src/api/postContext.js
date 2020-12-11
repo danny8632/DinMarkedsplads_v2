@@ -87,7 +87,7 @@ const PostsContextProvider = (props) => {
                 for (let key in post) {
 
                     if(key == "files")
-                        form.append(`image`, post[key], "test.jpg");
+                        form.append(`image`, post[key]);
                     else
                         form.append(key, post[key]);
                 }
