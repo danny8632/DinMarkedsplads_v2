@@ -14,6 +14,7 @@ const AuthContextProvider = (props) => {
                         userToken: action.token,
                         isLoading: false,
                         failedLogin: false,
+                        signedUp : false
                     };
                 case 'SIGN_IN':
                     return {
@@ -21,12 +22,19 @@ const AuthContextProvider = (props) => {
                         isSignout: false,
                         userToken: action.token,
                         failedLogin: false,
+                        signedUp : false
+                    };
+                case 'SIGN_UP':
+                    return {
+                        ...prevState,
+                        signedUp : true
                     };
                 case 'SIGN_OUT':
                     return {
                         ...prevState,
                         isSignout: true,
                         userToken: null,
+                        signedUp : false
                     };
                 case 'FAILED_LOGIN':
                     return {
@@ -34,6 +42,13 @@ const AuthContextProvider = (props) => {
                         failedLogin: true,
                         isSignout: false,
                         userToken: null,
+                        signedUp : false
+                    }
+                case 'FAILED_SIGNUP':
+                    return {
+                        ...prevState,
+                        failedLogin : true,
+                        errorMsg : action.error
                     }
             }
         },
@@ -42,6 +57,8 @@ const AuthContextProvider = (props) => {
             isSignout: false,
             userToken: null,
             failedLogin: false,
+            signedUp : false,
+            errorMsg : "",
         }
     );
 
@@ -110,7 +127,34 @@ const AuthContextProvider = (props) => {
             },
             signUp: async data => {
 
-                setUser({ type: 'SIGN_IN', token: 'dummy-auth-token' });
+                try {
+
+                    let response = await fetch('http://api.dannyhaslund.dk:3001/user/singup', {
+                        method: 'POST',
+                        headers: {
+                            Accept: 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            username: data.username,
+                            password: data.password
+                        })
+                    });
+                    let json = await response.json();
+
+                    if (!json.success) {
+                        setUser({ type: "FAILED_SIGNUP", error : json.error });
+                        return console.log("Wrong", json.error);
+                    }
+                    else
+                    {
+                        data.navigation.pop();
+                        setUser({ type: 'SIGN_UP' });
+                    }
+
+                } catch (e) {
+                    console.log(e)
+                }
             },
             getUser : () => {
                 return user;

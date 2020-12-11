@@ -7,6 +7,7 @@ import HomeScreen from './../screens/HomeScreen';
 import PostScreen from './../screens/PostScreen';
 import SearchScreen from './../screens/SearchScreen';
 import LoginScreen from './../screens/LoginScreen';
+import SignupScreen from './../screens/SignupScreen';
 import CreatePostScreen from './../screens/CreatePostScreen';
 import ProfileScreen from './../screens/ProfileScreen';
 
@@ -52,8 +53,20 @@ const LoginStack = createStackNavigator();
 const LoginNavigator = () => {
 
     return (
-        <LoginStack.Navigator>
+        <LoginStack.Navigator
+            initialRouteName="Login"
+            screenOptions={{
+                headerStyle: {
+                    backgroundColor: '#437FC7',
+                },
+                headerTintColor: '#fff',
+                headerTitleStyle: {
+                    fontWeight: 'bold',
+                },
+            }}
+        >
             <Stack.Screen name="Login" component={LoginScreen} options={{ title: "Login" }} />
+            <Stack.Screen name="Signin" component={SignupScreen} options={{ title: "Sign Up" }} />
         </LoginStack.Navigator>
     )
 }

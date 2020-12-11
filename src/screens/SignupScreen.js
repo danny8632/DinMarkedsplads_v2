@@ -4,7 +4,7 @@ import Button from './../common/Button';
 
 import { AuthContext } from '../api/authContext';
 
-const LoginScreen = ({ navigation }) => {
+const SignupScreen = ({ navigation }) => {
     const { auth, user } = useContext(AuthContext);
 
     const [username, setUsername] = useState('');
@@ -13,11 +13,11 @@ const LoginScreen = ({ navigation }) => {
     return (
         <View style={styles.container}>
             <View style={styles.titleWrapper}>
-                <Text style={styles.titleText}>Login</Text>
+                <Text style={styles.titleText}>Create new account</Text>
             </View>
 
-            <View style={{width : "100%"}}>
-                <Text style={styles.error_text}>{user.failedLogin ? 'Wrong' : (user.signedUp ? "Sign up successful!!" : "" )}</Text>
+            <View>
+                <Text style={styles.error_text}>{user.failedLogin ? user.errorMsg : ''}</Text>
             </View>
             <View style={styles.inputView}>
                 <TextInput
@@ -39,23 +39,13 @@ const LoginScreen = ({ navigation }) => {
                 />
             </View>
 
-            <Button title="Login" onPress={() => auth.signIn({username, password})} style={styles.loginBtn} />
-
-            <View style={styles.signupWrapper}>
-
-                <Text style={styles.signupText}>Stil don't have an account?</Text>
-
-                <TouchableOpacity style={{width : "80%"}} onPress={() => navigation.navigate("Signin")}>
-                    <Text style={styles.loginText}>Click here for Sign Up</Text>
-                </TouchableOpacity>
-
-            </View>
+            <Button title="Sign up" onPress={() => auth.signUp({username, password, navigation})} style={styles.loginBtn} />
 
         </View>
     );
 }
 
-export default LoginScreen;
+export default SignupScreen;
 
 const styles = StyleSheet.create({
     container: {
@@ -115,11 +105,5 @@ const styles = StyleSheet.create({
         fontSize : 40,
         fontWeight : "bold",
         color : "#437FC7"
-    },
-    error_text : {
-        fontWeight : "bold",
-        fontSize: 18,
-        width : "100%",
-        textAlign : "center",
     }
 });

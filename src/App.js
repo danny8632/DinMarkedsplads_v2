@@ -7,10 +7,10 @@ import PostsContextProvider from './api/postContext';
 
 export default function App() {
   return (
-    <PostsContextProvider>
-      <AuthContextProvider>
+    <AuthContextProvider>
+      <PostsContextProvider>
         <RootNavigation />
-      </AuthContextProvider>
-    </PostsContextProvider>
+      </PostsContextProvider>
+    </AuthContextProvider>
   );
 }

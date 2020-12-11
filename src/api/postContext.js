@@ -1,9 +1,13 @@
 import { ThemeProvider } from '@react-navigation/native';
-import React, { useContext, useEffect, useState, useReducer } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+
+import { AuthContext } from './authContext';
 
 export const PostsContext = React.createContext()
 
 const PostsContextProvider = (props) => {
+
+    const { user } = useContext(AuthContext);
 
     const [posts, setPosts] = useState([]);
 
@@ -69,6 +73,52 @@ const PostsContextProvider = (props) => {
             } catch (e) {
                 console.log("try error ", e)
             }
+        },
+        createPost: async (post) => {
+
+            try {
+
+                if (typeof post == "undefined") throw Error;
+
+                var form = new FormData();
+
+                console.log(post)
+
+                for (let key in post) {
+
+                    if(key == "files")
+                        form.append(`image`, post[key], "test.jpg");
+                    else
+                        form.append(key, post[key]);
+                }
+
+                let options = {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': "multipart/form-data; ",
+                        'Authorization': 'Bearer ' + user.userToken,
+                    },
+                    body : form
+                }
+
+                console.log(options.body, options.body.file)
+
+                let response = await fetch(`http://api.dannyhaslund.dk:3001/product`, options);
+
+                let json = await response.json();
+
+                if (!json.success || typeof json.results == "undefined") {
+                    return console.log(json);
+                }
+                else {
+                    setPosts((prev) => [...prev, json.results]);
+                }
+
+            } catch (e) {
+                console.log("try error ", e)
+            }
+
+
         }
     };
 
