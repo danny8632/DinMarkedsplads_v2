@@ -1,13 +1,14 @@
 import React, { useState, useContext } from 'react';
 import { StyleSheet, SafeAreaView, ScrollView, TextInput, View, Image } from 'react-native';
 
-import { StackActions } from '@react-navigation/native';
-
 import Button from './../common/Button';
 
 import { PostsContext } from '../api/postContext';
 
 import { launchImageLibrary } from 'react-native-image-picker';
+
+import RNFetchBlob from 'rn-fetch-blob'
+
 
 const HomeScreen = ({ navigation }) => {
 
@@ -17,7 +18,7 @@ const HomeScreen = ({ navigation }) => {
     const [price, setPrice] = useState(0);
     const [description, setDescription] = useState('');
     const [address, setAddress] = useState('');
-    const [zipcode, setZipcode] = useState(0);
+    const [zipcode, setZipcode] = useState('');
     const [region, setRegion] = useState('');
     const [files, setFiles] = useState({});
 
@@ -25,9 +26,7 @@ const HomeScreen = ({ navigation }) => {
 
         launchImageLibrary({mediaType : "photo", includeBase64 : true}, async (file) => {
             
-            file.name = file.fileName;
-
-            setFiles(file)
+            setFiles({ name : "gmme.jpg", filename :"gmme.jpg", type : "image/jpg", data : RNFetchBlob.wrap(file.uri)})
         });
     }
 
@@ -61,9 +60,7 @@ const HomeScreen = ({ navigation }) => {
                         style={styles.inputText}
                         placeholder="Price"
                         placeholderTextColor="#bbbebf"
-                        onChangeNumber={text => setPrice(text)}
-                        keyboardType="decimal-pad"
-                        number={price}
+                        onChangeText={text => setPrice(text)}
                     />
                 </View>
 
@@ -103,10 +100,10 @@ const HomeScreen = ({ navigation }) => {
                 <Button style={[styles.btn, { backgroundColor: "#437FC7", marginTop : 40 }]} title="Create Post" onPress={() => {
                     if(files == null) return;
 
-                    postsContext.createPost({ title, description, price, address, zipcode, region, files});
-                    /* const popAction = StackActions.pop(1);
-                    navigation.dispatch(popAction);
-                    navigation.navigate("Home"); */
+                    postsContext.createPost({ title, description, price, address, zipcode, region, files}, () => {
+                        navigation.pop();
+                        navigation.navigate("Home");
+                    });
                 }} />
 
             </ScrollView>

@@ -76,7 +76,7 @@ const PostsContextProvider = (props) => {
                 console.log("try error ", e)
             }
         },
-        createPost: async (post) => {
+        createPost: async (post, cb) => {
 
             try {
 
@@ -87,21 +87,24 @@ const PostsContextProvider = (props) => {
                 for (let key in post) {
 
                     if (key == "files")
-                        form.push({ name : post[key].fileName, filename : post[key].fileName, type : post[key].type, data : post[key].base64});
+                        form.push(post.files);
                     else
                         form.push({ name : key, data : post[key]});
                 }
 
-                console.log(form);
-
-
                 RNFetchBlob.fetch('POST', 'http://api.dannyhaslund.dk:3001/product', {
                     Authorization: 'Bearer ' + user.userToken,
                     'Content-Type': 'multipart/form-data',
-                }, form).then((resp) => {
-                    console.log(resp)
+                }, form).then(async (resp) => {
+
+                    let json = await resp.json();
+
+                    setPosts((prev) => [...prev, json.results[0]]);
+
+                    cb();
+                    
                 }).catch((err) => {
-                    // ...
+                    return console.log(err);
                 })
 
             } catch (e) {
