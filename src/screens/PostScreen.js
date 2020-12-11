@@ -32,7 +32,11 @@ const PostScreen = ({route}) => {
 
     const { postsContext } = useContext(PostsContext)
 
-    postsContext.fetchComments(post);
+    useEffect(() => {
+        postsContext.fetchComments(post);
+
+    }, [])
+
 
 
     return (

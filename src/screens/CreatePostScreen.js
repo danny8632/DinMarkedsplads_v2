@@ -23,7 +23,7 @@ const HomeScreen = ({ navigation }) => {
 
     const pickImage = async () => {
 
-        launchImageLibrary({mediaType : "photo", noData: true}, async (file) => {
+        launchImageLibrary({mediaType : "photo", includeBase64 : true}, async (file) => {
             
             file.name = file.fileName;
 
@@ -96,8 +96,6 @@ const HomeScreen = ({ navigation }) => {
                         value={region}
                     />
                 </View>
-
-                <Image source={{ uri : files.uri}} style={{width : 300, height : 300}} />
 
                 <Button style={styles.btn} title="Chose image" onPress={() => pickImage()} />
 

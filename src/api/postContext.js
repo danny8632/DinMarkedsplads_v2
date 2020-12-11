@@ -3,6 +3,8 @@ import React, { useContext, useEffect, useState } from 'react';
 
 import { AuthContext } from './authContext';
 
+import RNFetchBlob from 'rn-fetch-blob'
+
 export const PostsContext = React.createContext()
 
 const PostsContextProvider = (props) => {
@@ -80,39 +82,27 @@ const PostsContextProvider = (props) => {
 
                 if (typeof post == "undefined") throw Error;
 
-                var form = new FormData();
-
-                console.log(post)
+                var form = [];
 
                 for (let key in post) {
 
-                    if(key == "files")
-                        form.append(`image`, post[key]);
+                    if (key == "files")
+                        form.push({ name : post[key].fileName, filename : post[key].fileName, type : post[key].type, data : post[key].base64});
                     else
-                        form.append(key, post[key]);
+                        form.push({ name : key, data : post[key]});
                 }
 
-                let options = {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': "multipart/form-data; ",
-                        'Authorization': 'Bearer ' + user.userToken,
-                    },
-                    body : form
-                }
+                console.log(form);
 
-                console.log(options.body, options.body.file)
 
-                let response = await fetch(`http://api.dannyhaslund.dk:3001/product`, options);
-
-                let json = await response.json();
-
-                if (!json.success || typeof json.results == "undefined") {
-                    return console.log(json);
-                }
-                else {
-                    setPosts((prev) => [...prev, json.results]);
-                }
+                RNFetchBlob.fetch('POST', 'http://api.dannyhaslund.dk:3001/product', {
+                    Authorization: 'Bearer ' + user.userToken,
+                    'Content-Type': 'multipart/form-data',
+                }, form).then((resp) => {
+                    console.log(resp)
+                }).catch((err) => {
+                    // ...
+                })
 
             } catch (e) {
                 console.log("try error ", e)
